@@ -181,9 +181,9 @@ var app = builder.Build();</code></pre>
               <span>Basic example</span>
               <button class="copy-button" data-copy-target="quickstart-snippet">Copy</button>
             </div>
-            <pre id="quickstart-snippet"><code>public sealed record GetOrderById(Guid Id);
+            <pre id="quickstart-snippet"><code>public sealed record GetOrderById(Guid Id) : IRequest&lt;OrderDto&gt;;
 
-public sealed class GetOrderByIdHandler
+public sealed class GetOrderByIdHandler : IRequestHandler&lt;GetOrderById, OrderDto&gt;
 {
     public async Task&lt;OrderDto&gt; Handle(GetOrderById query, CancellationToken cancellationToken)
     {
