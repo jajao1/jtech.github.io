@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Middleman for .NET</title>
+    <meta
+      name="description"
+      content="Professional documentation for Middleman, a lightweight, in-process CQRS mediator for .NET."
+    />
+    <meta property="og:title" content="Middleman for .NET" />
+    <meta
+      property="og:description"
+      content="A clean documentation site for Middleman, the lightweight in-process CQRS mediator for .NET."
+    />
+    <meta property="og:type" content="website" />
+    <meta name="theme-color" content="#10233b" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+    <script defer src="script.js"></script>
+  </head>
+  <body>
+    <div class="site-shell">
+      <aside class="sidebar" id="sidebar">
+        <a class="brand" href="#top" aria-label="Middleman home">
+          <span class="brand-mark">M</span>
+          <span class="brand-copy">
+            <strong>Middleman</strong>
+            <span>.NET docs</span>
+          </span>
+        </a>
+
+        <nav class="sidebar-nav" aria-label="Documentation">
+          <a href="#overview">Overview</a>
+          <a href="#why-middleman">Why Middleman</a>
+          <a href="#installation">Installation</a>
+          <a href="#quick-start">Quick Start</a>
+          <a href="#cqrs-model">CQRS Model</a>
+          <a href="#handlers">Handlers</a>
+          <a href="#aspnet">ASP.NET Core</a>
+          <a href="#testing">Testing</a>
+          <a href="#faq">FAQ</a>
+          <a href="#resources">Resources</a>
+        </nav>
+
+        <div class="sidebar-footer">
+          <p>Adapted from the project README and repository positioning.</p>
+          <a href="https://github.com/jajao1/Middleman">Source repository</a>
+        </div>
+      </aside>
+
+      <main class="content" id="top">
+        <header class="hero">
+          <div class="hero-copy">
+            <p class="eyebrow">Middleman for .NET</p>
+            <h1>Lightweight CQRS mediation without framework drag.</h1>
+            <p class="lede">
+              Middleman is an in-process mediator for .NET applications built around
+              command and query separation. It keeps request dispatching explicit,
+              testable, and easy to reason about inside web apps, workers, and modular
+              backends.
+            </p>
+            <div class="hero-actions">
+              <a class="button button-primary" href="#quick-start">Get started</a>
+              <a class="button button-secondary" href="https://github.com/jajao1/Middleman"
+                >View on GitHub</a
+              >
+            </div>
+          </div>
+          <div class="hero-card">
+            <div class="code-window">
+              <div class="code-window-bar">
+                <span></span><span></span><span></span>
+              </div>
+              <pre><code>builder.Services.AddMiddleman();
+
+app.MapPost("/orders", async (
+    CreateOrder command,
+    IMiddleman middleman) =>
+{
+    var result = await middleman.Send(command);
+    return Results.Ok(result);
+});</code></pre>
+            </div>
+          </div>
+        </header>
+
+        <section class="feature-grid" aria-label="Highlights">
+          <article>
+            <h2>Minimal overhead</h2>
+            <p>Designed for in-process messaging without introducing unnecessary abstractions or infrastructure cost.</p>
+          </article>
+          <article>
+            <h2>CQRS-first</h2>
+            <p>Use commands and queries as explicit application boundaries with clear handler ownership.</p>
+          </article>
+          <article>
+            <h2>Fits modern .NET</h2>
+            <p>Works naturally with dependency injection, ASP.NET Core endpoints, background services, and tests.</p>
+          </article>
+        </section>
+
+        <section id="overview" class="doc-section">
+          <div class="section-heading">
+            <p class="eyebrow">Overview</p>
+            <h2>What Middleman is for</h2>
+          </div>
+          <p>
+            Middleman sits between your transport layer and your application logic. A
+            controller, minimal API endpoint, worker, or service creates a request,
+            sends it through the mediator, and the correct handler executes the use
+            case. That keeps orchestration code small and application logic focused.
+          </p>
+          <p>
+            For teams using CQRS as a practical boundary rather than a buzzword,
+            Middleman gives you the structure without forcing a heavyweight stack.
+          </p>
+        </section>
+
+        <section id="why-middleman" class="doc-section">
+          <div class="section-heading">
+            <p class="eyebrow">Why Middleman</p>
+            <h2>Keep application flow obvious</h2>
+          </div>
+          <div class="callout">
+            <strong>Use Middleman when:</strong>
+            <p>
+              you want request and handler boundaries, but you do not want your
+              application architecture to revolve around the mediator library itself.
+            </p>
+          </div>
+          <ul class="doc-list">
+            <li>Commands express intent for state changes.</li>
+            <li>Queries express read operations and return dedicated result models.</li>
+            <li>Handlers stay close to the business use case they implement.</li>
+            <li>HTTP endpoints become thin dispatchers instead of service orchestrators.</li>
+          </ul>
+        </section>
+
+        <section id="installation" class="doc-section">
+          <div class="section-heading">
+            <p class="eyebrow">Installation</p>
+            <h2>Add the package and register it</h2>
+          </div>
+          <div class="code-block">
+            <div class="code-block-header">
+              <span>.NET CLI</span>
+              <button class="copy-button" data-copy-target="install-snippet">Copy</button>
+            </div>
+            <pre id="install-snippet"><code>dotnet add package Middleman</code></pre>
+          </div>
+          <div class="code-block">
+            <div class="code-block-header">
+              <span>Program.cs</span>
+              <button class="copy-button" data-copy-target="register-snippet">Copy</button>
+            </div>
+            <pre id="register-snippet"><code>var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddMiddleman();
+
+var app = builder.Build();</code></pre>
+          </div>
+          <p class="muted">
+            Package naming, target frameworks, and registration details should always be
+            confirmed against the upstream repository before production rollout.
+          </p>
+        </section>
+
+        <section id="quick-start" class="doc-section">
+          <div class="section-heading">
+            <p class="eyebrow">Quick Start</p>
+            <h2>Define a request, add a handler, send it</h2>
+          </div>
+          <div class="code-block">
+            <div class="code-block-header">
+              <span>Basic example</span>
+              <button class="copy-button" data-copy-target="quickstart-snippet">Copy</button>
+            </div>
+            <pre id="quickstart-snippet"><code>public sealed record GetOrderById(Guid Id);
+
+public sealed class GetOrderByIdHandler
+{
+    public async Task&lt;OrderDto&gt; Handle(GetOrderById query, CancellationToken cancellationToken)
+    {
+        // Load and map your entity here.
+        return await Task.FromResult(new OrderDto(query.Id, "Processing"));
+    }
+}
+
+public sealed record OrderDto(Guid Id, string Status);
+
+var order = await middleman.Send(new GetOrderById(orderId));</code></pre>
+          </div>
+          <p>
+            The exact interface names depend on the package version, but the core model
+            remains the same: define a message type, implement the corresponding
+            handler, and dispatch from the edge of the application.
+          </p>
+        </section>
+
+        <section id="cqrs-model" class="doc-section">
+          <div class="section-heading">
+            <p class="eyebrow">CQRS Model</p>
+            <h2>Separate reads from writes</h2>
+          </div>
+          <div class="two-column">
+            <article class="panel">
+              <h3>Commands</h3>
+              <p>
+                Commands change state. They should describe intent clearly and keep the
+                write side cohesive.
+              </p>
+              <pre><code>public sealed record CreateInvoice(Guid CustomerId, decimal Amount);</code></pre>
+            </article>
+            <article class="panel">
+              <h3>Queries</h3>
+              <p>
+                Queries return data and should avoid write-side side effects.
+              </p>
+              <pre><code>public sealed record GetInvoice(Guid InvoiceId);</code></pre>
+            </article>
+          </div>
+          <p>
+            A simple rule helps: if the request changes system state, treat it as a
+            command. If it only reads data, treat it as a query. Middleman gives both
+            patterns a consistent dispatch mechanism.
+          </p>
+        </section>
+
+        <section id="handlers" class="doc-section">
+          <div class="section-heading">
+            <p class="eyebrow">Handlers</p>
+            <h2>One use case, one handler</h2>
+          </div>
+          <ul class="doc-list">
+            <li>Keep handlers focused on one request type.</li>
+            <li>Inject only the dependencies required by that specific use case.</li>
+            <li>Return transport-neutral result objects whenever possible.</li>
+            <li>Leave HTTP concerns and serialization at the application edge.</li>
+          </ul>
+          <div class="callout subtle">
+            <strong>Practical guidance:</strong>
+            <p>
+              if a handler becomes large, the problem is usually the use case boundary,
+              not the mediator. Split the request or extract domain logic.
+            </p>
+          </div>
+        </section>
+
+        <section id="aspnet" class="doc-section">
+          <div class="section-heading">
+            <p class="eyebrow">ASP.NET Core</p>
+            <h2>Thin endpoints, explicit dispatch</h2>
+          </div>
+          <div class="code-block">
+            <div class="code-block-header">
+              <span>Minimal API</span>
+              <button class="copy-button" data-copy-target="aspnet-snippet">Copy</button>
+            </div>
+            <pre id="aspnet-snippet"><code>app.MapGet("/customers/{id:guid}", async (
+    Guid id,
+    IMiddleman middleman,
+    CancellationToken cancellationToken) =>
+{
+    var customer = await middleman.Send(new GetCustomer(id), cancellationToken);
+    return customer is null ? Results.NotFound() : Results.Ok(customer);
+});</code></pre>
+          </div>
+          <p>
+            This pattern keeps routing and HTTP details in the endpoint while business
+            behavior stays inside request handlers. It scales well as the codebase grows.
+          </p>
+        </section>
+
+        <section id="testing" class="doc-section">
+          <div class="section-heading">
+            <p class="eyebrow">Testing</p>
+            <h2>Test handlers directly</h2>
+          </div>
+          <p>
+            Middleman encourages testing at the request-handler boundary. That gives you
+            focused unit tests without standing up the full web stack for every case.
+          </p>
+          <div class="code-block">
+            <div class="code-block-header">
+              <span>xUnit sketch</span>
+              <button class="copy-button" data-copy-target="test-snippet">Copy</button>
+            </div>
+            <pre id="test-snippet"><code>[Fact]
+public async Task Returns_order_when_it_exists()
+{
+    var handler = new GetOrderByIdHandler();
+
+    var result = await handler.Handle(new GetOrderById(Guid.NewGuid()), CancellationToken.None);
+
+    Assert.Equal("Processing", result.Status);
+}</code></pre>
+          </div>
+        </section>
+
+        <section id="faq" class="doc-section">
+          <div class="section-heading">
+            <p class="eyebrow">FAQ</p>
+            <h2>Common questions</h2>
+          </div>
+          <div class="faq">
+            <article>
+              <h3>Is Middleman a full framework?</h3>
+              <p>No. It is a focused mediator library intended to support application boundaries, not replace your architecture.</p>
+            </article>
+            <article>
+              <h3>Does this force full CQRS everywhere?</h3>
+              <p>No. You can adopt commands and queries where they help and keep simpler flows simple.</p>
+            </article>
+            <article>
+              <h3>Should every service call become a request?</h3>
+              <p>No. Use mediator boundaries for application use cases. Keep local private logic as plain methods where that is clearer.</p>
+            </article>
+          </div>
+        </section>
+
+        <section id="resources" class="doc-section">
+          <div class="section-heading">
+            <p class="eyebrow">Resources</p>
+            <h2>Upstream links</h2>
+          </div>
+          <div class="resource-cards">
+            <a class="resource-card" href="https://github.com/jajao1/Middleman">
+              <strong>GitHub repository</strong>
+              <span>Project source, issues, and upstream README.</span>
+            </a>
+            <a class="resource-card" href="https://github.com/jajao1/Middleman/blob/main/README.md">
+              <strong>README</strong>
+              <span>Primary source for installation and usage details.</span>
+            </a>
+          </div>
+          <p class="muted">
+            This site is designed as a clean, GitHub Pages-friendly documentation layer
+            for the library. If the upstream README changes, update the relevant
+            sections here to keep the docs aligned.
+          </p>
+        </section>
+      </main>
+    </div>
+
+    <button class="menu-toggle" id="menu-toggle" aria-expanded="false" aria-controls="sidebar">
+      Menu
+    </button>
+  </body>
+</html>
